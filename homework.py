@@ -1,47 +1,24 @@
 # -*- coding: utf-8 -*-
 
-# cook_book = {
-#     'яйчница': [
-#         {'ingridient_name': 'яйца', 'quantity': 2, 'measure': 'шт.'},
-#         {'ingridient_name': 'помидоры', 'quantity': 100, 'measure': 'гр.'}
-#     ],
-#     'стейк': [
-#         {'ingridient_name': 'говядина', 'quantity': 300, 'measure': 'гр.'},
-#         {'ingridient_name': 'специи', 'quantity': 5, 'measure': 'гр.'},
-#         {'ingridient_name': 'масло', 'quantity': 10, 'measure': 'мл.'}
-#     ],
-#     'салат': [
-#         {'ingridient_name': 'помидоры', 'quantity': 100, 'measure': 'гр.'},
-#         {'ingridient_name': 'огурцы', 'quantity': 100, 'measure': 'гр.'},
-#         {'ingridient_name': 'масло', 'quantity': 100, 'measure': 'мл.'},
-#         {'ingridient_name': 'лук', 'quantity': 1, 'measure': 'шт.'}
-#     ]
-# }
 
 def read_cookbook():
-
     cook_book = {}
-
     with open('cookbook.txt') as f:
         for line in f:
-            dish_name = line.strip()
+            dish_name = line.strip().lower()
             ingridients_num = int(f.readline().strip())
+            cook_book[dish_name] = []
 
             for i in range(ingridients_num):
                 ingridient_list = f.readline().strip().split(' | ')
-                cook_book[dish_name][i] = {'ingridient_name': 1, 'quantity': 2, 'measure': 3}
-
-                #print(ingridient_list)
-
-            # прочитать пустую строку
+                cook_book[dish_name].append({'ingridient_name': ingridient_list[0], 'quantity': int(ingridient_list[1]), 'measure': ingridient_list[2]})
             f.readline()
 
-            #cook_book[dish_name] = ingridients_num
-        print(cook_book)
+    print(cook_book)
+    return cook_book
 
 
-
-def get_shop_list_by_dishes(dishes, person_count):
+def get_shop_list_by_dishes(dishes, person_count, cook_book):
     shop_list = {}
     for dish in dishes:
         for ingridient in cook_book[dish]:
@@ -65,10 +42,9 @@ def create_shop_list():
     person_count = int(input('Введите количество человек: '))
     dishes = input('Введите блюда в расчете на одного человека (через запятую): ') \
         .lower().split(', ')
-    shop_list = get_shop_list_by_dishes(dishes, person_count)
+    cook_book = read_cookbook()
+    shop_list = get_shop_list_by_dishes(dishes, person_count, cook_book)
     print_shop_list(shop_list)
 
 
-#create_shop_list()
-
-read_cookbook()
+create_shop_list()
